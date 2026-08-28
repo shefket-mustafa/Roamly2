@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router'
 import MainLayout from './layout/MainLayout'
 import Landing from './pages/Landing'
+import Trips from './pages/Trips'
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
   <Routes>
     <Route element={<MainLayout />}>
     <Route path='/' element={<Landing />}/>
+    <Route path='/trips' element={<Trips />}/>
     </Route>
   </Routes>      
   )

@@ -1,4 +1,3 @@
-import { FaSearch } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 import { Link } from "react-router";
 import LeftArrow from "../assets/icons/LeftArrow";
@@ -13,8 +12,29 @@ import TravelImg2 from "../assets/images/travel-image2.webp";
 import TravelImg3 from "../assets/images/image2.jpg";
 import TravelImg4 from "../assets/images/image3.jpg";
 import LetsGoImg from "../assets/images/letsGoImage.jpg";
+import { useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+import {AnimatePresence, motion} from "motion/react"
+import TripsImg from "../assets/images/TripsImage.jpg"
+import DateRangePickerValue from "../components/Calendar";
+import AirplaneIcon from "../assets/icons/airplane-02-stroke-rounded";
+import CancelIcon from "../assets/icons/cancel";
+import PeopleIcon from "../assets/icons/People";
 
 export default function Landing() {
+  const [planning, setPlanning] = useState(false);
+  const [planFormData, setPlanFormData] = useState({
+    destination: "",
+    checkIn: "",
+    checkOut: "",
+    travelers: ""
+  })
+
+  useEffect(() => {
+    const image = new Image();
+    image.src = TripsImg;
+  })
+
   return (
     <>
       <section className="relative min-h-dvh w-full overflow-hidden">
@@ -25,9 +45,98 @@ export default function Landing() {
           className="object-cover absolute inset-0 h-full w-full"
         />
 
+        
+    
         <div className="absolute inset-0 bg-black/20" />
 
-        <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-5 px-10 pt-24 text-center text-white">
+       <AnimatePresence mode="wait">
+        {planning ? (
+          <motion.div
+          key="planner"
+          initial={{opacity:0, x:120}}
+          animate={{opacity:1, x:0}}
+          exit={{opacity:0, x:-120}}
+          transition={{duration:0.35}}
+          >
+            <div className="relative z-10 gap-10 flex flex-col justify-center items-center min-h-dvh text-center px-10">
+
+            <div className="flex text-white justify-between items-center gap-5">
+              <div onClick={() => setPlanning(!planning)}>
+              <LeftArrow size={40}/>
+              </div>
+            <p className="text-white text-5xl">Your plan starts here</p>
+            </div>
+
+            <form  className="flex gap-5 py-10 bg-white/90  rounded-lg px-10">
+
+            <div className="flex justify-center items-center">
+
+            <div className="relative flex justify-center items-center">
+
+          <div className="w-62.5 flex justify-center items-center gap-2">
+          <AirplaneIcon size={19}/>
+  <input
+    id="destination"
+    name="destination"
+    placeholder="Destination"
+    value={planFormData.destination}
+    onChange={(event) => setPlanFormData((previous,) => ({
+      ...previous,
+      destination: event.target.value
+      
+    }))}
+    className="rounded-lg max-w-45 focus:outline-none truncate"
+    />
+    </div>
+    <div onClick={() => setPlanFormData((previous) => ({...previous, destination: ""}))}>
+      {planFormData.destination ? (
+        <CancelIcon className="absolute top-0 right-5"/>
+
+      ): ""}
+    </div>
+
+</div>
+ 
+ 
+                                     <div className="relative w-62.5 flex gap-2 justify-center items-center">
+                  <PeopleIcon className="" size={19}/>
+  <input
+    id="travelers"
+    name="travelers"
+    placeholder="Travelers"
+    className=" rounded-lg max-w-45 focus:outline-none truncate"
+    onChange={(event) => setPlanFormData((previous) => ({
+      ...previous,
+      travelers: event.target.value
+    }))}
+  />
+  <div onClick={() => setPlanFormData((previous) => ({...previous, travelers: ""}))}>
+    {planFormData.travelers ? (
+      <CancelIcon className="absolute top-0 right-5"/>
+    ) : ""} 
+    </div>
+</div>
+<div className="relative max-w-70 w-full">
+  <DateRangePickerValue className=" w-full"/>
+</div>
+            </div>
+
+              <button onClick={(event) => {
+                event.preventDefault();
+              }} className="w-40 h-15 rounded-2xl text-white bg-emerald-600 mr-5">Search</button>
+
+            </form>
+
+
+            </div>
+          </motion.div>
+        ) : (
+                  <motion.div 
+          key="intro"
+          initial={{opacity:1, x:0}}
+          exit={{opacity:0, x:-120}}
+          transition={{duration: 0.35}}
+        className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-5 px-10 pt-24 text-center text-white">
           <h1 className="max-w-7xl text-8xl">
             Plan unforgettable trips together.
           </h1>
@@ -37,13 +146,17 @@ export default function Landing() {
             your travel group.
           </p>
 
-          <Link
-            to="/login"
+          <button
             className="rounded-full bg-emerald-700 px-10 py-4 font-bold text-white hover:bg-emerald-800"
-          >
+            onClick={() => setPlanning(!planning)}
+            >
             Start planning
-          </Link>
-        </div>
+          </button>
+        </motion.div>  
+        )}
+
+            </AnimatePresence>
+
       </section>
 
       <section className="w-full bg-white px-10 py-20 text-black ">
